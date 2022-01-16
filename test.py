@@ -1,78 +1,68 @@
+import numpy as np
 import cv2
 
-# filename = '/Users/alex/Documents/Python_projects/car_CV/receipts/1.jpg'
-filename = f'receipts/1.jpg' #f'Resources/R4S_QR9.jpg'
+#Example 1
+# cap = cv2.VideoCapture('http://192.168.1.109/')
+#
+# while(cap.isOpened()):
+#     ret, image = cap.read()
+#     loadedImage = cv2.imdecode(image, cv2.IMREAD_COLOR)
+#     cv2.imshow('frame', loadedImage)
+#     if cv2.waitKey(1) & 0xFF == ord('q'):
+#         break
+#
+# cap.release()
+# cv2.destroyAllWindows()
 
-# read the QRCODE image
-img = cv2.imread(filename, 0)#Параметр 0 переводит имидж в grayscale
-img1 = cv2.imread(filename)
+# #Example 2
+# # Open a sample video available in sample-videos
+# vcap = cv2.VideoCapture('http://192.168.1.109/')
+# if not vcap.isOpened():
+#    print("File Cannot be Opened")
+#
+# while(True):
+#     # Capture frame-by-frame
+#     ret, frame = vcap.read()
+#     #print cap.isOpened(), ret
+#     if frame is not None:
+#         # Display the resulting frame
+#         cv2.imshow('frame',frame)
+#         # Press q to close the video windows before it ends if you want
+#         if cv2.waitKey(22) & 0xFF == ord('q'):
+#             break
+#     else:
+#         print("Frame is None")
+#         break
+#
+# # When everything done, release the capture
+# vcap.release()
+# cv2.destroyAllWindows()
+# print ("Video stop")
 
-# initialize the cv2 QRCode detector
-detector = cv2.QRCodeDetector()
+#Example 3
+cap = cv2.VideoCapture(0);               # Видео вывод с веб камеры компьютера, при включенной камере
+#cap = cv2.VideoCapture("VIDEO0102.mp4"); # Вывод с видео файла
 
-# detect and decode
-data, bbox, straight_qrcode = detector.detectAndDecode(img)
+print(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) # Вывод в консоли размера нашего окна.
 
+cap.set(3,1280) # Установление длины окна
+cap.set(4,700)  # Ширина окна
 
-# if there is a QR code
-if bbox is not None:
-    print(f"QRCode data:\n{data}")
-    # display the image with lines
-    # length of bounding box
-    n_lines = len(bbox[0])#Поскольку bbox = [[[float, float]]], необходимо перейти к int и идти по первому элементу массива
-    bbox1 = bbox.astype(int) #Преобразовали координаты к целочисленным
-    for i in range(n_lines):
-        # draw all lines
-        point1 = tuple(bbox1[0, [i][0]])
-        point2 = tuple(bbox1[0, [(i+1) % n_lines][0]])
-        cv2.line(img1, point1, point2, color=(255, 0, 0), thickness=2)
+print(cap.get(3))
+print(cap.get(4))
 
+while (True):
+    ret, frame = cap.read()
+    frame = cv2.rectangle(frame, (384, 0), (510, 128), (0, 0, 255), 2)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Перевод массива кадров в черно-белую градацию
+    gray = cv2.GaussianBlur(gray, (7, 7), 1.5)  # Параметры позволяют регулировать шумность
 
+    edges = cv2.Canny(gray, 1, 50)  # Нахождение контуров
+    cv2.imshow("edges", edges)  # обработанный вариант
 
-# # if there is a QR code
-# if bbox is not None:
-#     print(f"QRCode data:\n{data}")
-#     # print(f"QRCode bbox:\n{bbox}")
-#     # display the image with lines
-#     # length of bounding box
-#     n_lines = len(bbox[0])#Поскольку bbox = [[[float, float]]], необходимо перейти к int и извлечь все элементы в
-#     bbox1 = bbox[0].astype(int)
-#     print('bbox1 = ', bbox1)
-#     for i in range(n_lines):
-#         # draw all lines
-#         point00 = bbox1[i][0]
-#         point01 = bbox1[i][1]
-#         # print('point1 =', point1)
-#         point10 = bbox1[(i + 1) % n_lines][0]
-#         point11 = bbox1[(i + 1) % n_lines][1]
-#         # print('point2 =', point2)
-#         cv2.line(img1, [point00, point01], [point10, point11], (255, 0, 0), 2)
+    print(frame)
 
-    # for i in range(n_lines):
-    #     for j in range(n_lines):
-    #         # draw all lines
-    #
-    #         # point1 = tuple(bbox[i][j])
-    #         # print('point1 = ', point1)
-    #         # point2 = tuple(bbox[(i+1) % n_lines][j])
-    #         # img1 = cv2.line(img1, point1, point2, (255, 0, 0), 2) #Пытаемся нарисовать линии по периметру картинки
-    #         img1 = cv2.line(img1, bbox[i][j], bbox[i][(j+1) % n_lines], (255, 0, 0), 2)
-    #         # cv2.line(img1, [20, 20], [20, 309], (255, 0, 0), 2)
-    #         # cv2.line(img1, [20, 309], [309, 309], (255, 0, 0), 2)
-    #         # cv2.line(img1, [309, 309], [309, 20], (255, 0, 0), 2)
-    #         # cv2.line(img1, [309, 20], [20, 20], (255, 0, 0), 2)
+    cv2.imshow("frame", frame)  # оригинальный вариант
 
-    #QR code has 6 variables respectively as:
-#Size of QR code image
-# Top
-# Right
-# Bottom
-# Left
-# Unit
-
-# display the result
-    cv2.imshow("result", img1)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-else:
-    print("QR code not detected")
+cap.release()
+cv2.destroyAllWindows()
