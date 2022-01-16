@@ -28,11 +28,12 @@ import numpy as np
 
 #Выбрать URL в зависимости от работоспособности системы, скорости передачи данных и т.д.
 #url = 'http://192.168.1.109/cam-lo.jpg'
-#url = 'http://192.168.1.109/cam.mjpeg'
-url = 'http://192.168.1.109/cam-hi.jpg'
+#url = 'http://192.168.1.112/cam.mjpeg'
+url = 'http://192.168.1.112/cam-hi.jpg'
 #url = 'http://192.168.1.109/cam.bmp'
 # initialize the cv2 QRCode detector
 detector = cv2.QRCodeDetector()
+
 
 while True:
     try:
@@ -56,10 +57,12 @@ while True:
                 point1 = tuple(bbox1[0, [i][0]])
                 point2 = tuple(bbox1[0, [(i + 1) % n_lines][0]])
                 cv2.line(img, point1, point2, color=(255, 0, 0), thickness=2)
+
+        # all the opencv processing is done here
+        cv2.imshow('stream', img)
+        if ord('q') == cv2.waitKey(10):
+            exit(0)
     except:
         pass
 
-    #all the opencv processing is done here
-    cv2.imshow('stream', img)
-    if ord('q') == cv2.waitKey(10):
-        exit(0)
+
