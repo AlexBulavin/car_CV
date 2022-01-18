@@ -66,9 +66,9 @@ qr = qrcode.QRCode(
 #ERROR_CORRECT_Q = 25%
 #ERROR_CORRECT_H = 30%
 
+qr_data = "Traffic light 1.1"
 
-
-qr.add_data('https://readyforsky.com')
+qr.add_data(f"QRCode for: {qr_data}")
 img = qr.make_image(back_color=(47, 48, 70), fill_color=(255, 255, 255)).convert('RGB') #Задаём параметры для файла и конвертируем в RGB чтобы логотип был цветным
 img1 = qr.make_image()
 pos = (
@@ -76,5 +76,5 @@ pos = (
     (img.size[1] - logo.size[1]) // 2,
 )
 # img.paste(logo, pos)
-img1.save(f'Resources/R4S_QR10.jpg', 'JPEG') #Указываем папку в которую нужно сохранить файл
+img1.save(f'Resources/{qr_data}.jpg', 'JPEG') #Указываем папку в которую нужно сохранить файл
 
