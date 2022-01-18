@@ -73,7 +73,7 @@ while True:
             bts = bts[jpgend + 2:]
             img = cv.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv.IMREAD_UNCHANGED)
             # img=cv.flip(img,0) #>0:#Поворот по вертикали, 0:Поворот по горизонтали, <0:Отразить по вертикали и по горизонтали
-            # h,w=img.shape[:2]
+            # h, w = img.shape[:2]
             # print('Размер изображения по высоте:' + str(h) + 'ширине：' + str(w))
             img = cv.resize(img, (640, 480))
 
