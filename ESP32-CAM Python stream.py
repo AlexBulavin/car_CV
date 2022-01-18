@@ -22,8 +22,8 @@ counter_tl_3 = tl_0 #Задали сначение для счётчика вр�
 counter_tl_4 = tl_0 #Задали сначение для счётчика времени каждого светофора
 counter_tl_5 = tl_0 #Задали сначение для счётчика времени каждого светофора
 id_tl_1 = "https://readyforsky.com"
-id_tl_2 = "Traffic light 12345"
-id_tl_3 = "Traffic light 11"
+id_tl_2 = "Traffic light 22342"
+id_tl_3 = "Traffic light 12345"
 
 #Буферные накопители для устранения дребезга
 buffer1 = 0
@@ -31,8 +31,8 @@ buffer2 = 0
 buffer3 = 0
 
 # change to your ESP32-CAM ip
-url = "http://192.168.1.109/cam.mjpeg"
-CAMERA_BUFFRER_SIZE = 16384 #8192 #4096
+url = "http://192.168.1.107/cam.mjpeg"
+CAMERA_BUFFRER_SIZE = 4096 #16384 #8192 #4096
 stream = urlopen(url)
 bts = b''
 i = 0
@@ -40,31 +40,31 @@ detector = cv.QRCodeDetector()
 
 while True:
     #Задаём установку цветов для светофора 1
-    if time.time() + ph_1 - counter_tl_1 < tl_1:
+    if time.time() + ph_1 - counter_tl_1 < tl_1 + ph_1:
         tl_1_color = 'red'
-    elif time.time() + ph_1 - counter_tl_1 < 2 * tl_1:
+    elif time.time() + ph_1 - counter_tl_1 < 2 * tl_1 + ph_1:
         tl_1_color = 'yellow'
-    elif time.time() + ph_1 - counter_tl_1 < 3 * tl_1:
+    elif time.time() + ph_1 - counter_tl_1 < 3 * tl_1 + ph_1:
         tl_1_color = 'green'
     else:
         counter_tl_1 = time.time()
 
     # Задаём установку цветов для светофора 2
-    if time.time() + ph_2 - counter_tl_2 < tl_2:
+    if time.time() + ph_2 - counter_tl_2 < tl_2 + ph_2:
         tl_2_color = 'red'
-    elif time.time() + ph_2 - counter_tl_2 < 2 * tl_2:
+    elif time.time() + ph_2 - counter_tl_2 < 2 * tl_2 + ph_2:
         tl_2_color = 'yellow'
-    elif time.time() + ph_2 - counter_tl_2 < 3 * tl_2:
+    elif time.time() + ph_2 - counter_tl_2 < 3 * tl_2 + ph_2:
         tl_2_color = 'green'
     else:
         counter_tl_2 = time.time()
 
     # Задаём установку цветов для светофора 3
-    if time.time() + ph_3 - counter_tl_3 < tl_3:
+    if time.time() + ph_3 - counter_tl_3 < tl_3 + ph_3:
         tl_3_color = 'red'
-    elif time.time() + ph_3 - counter_tl_3 < 2 * tl_3:
+    elif time.time() + ph_3 - counter_tl_3 < 2 * tl_3 + ph_3:
         tl_3_color = 'yellow'
-    elif time.time() + ph_3 - counter_tl_3 < 3 * tl_3:
+    elif time.time() + ph_3 - counter_tl_3 < 3 * tl_3 +ph_3:
         tl_3_color = 'green'
     else:
         counter_tl_3 = time.time()
@@ -95,12 +95,11 @@ while True:
             # if there is a QR code
             if bbox is not None:
                 print(f"QRCode data:\n{data}")
-                if str(data) == str(id_tl_1):
+                if data == id_tl_1:
                     buffer1 = buffer1 + 1
                     buffer2 = 0
                     buffer3 = 0
                     if buffer1 > 8: #Антидребезг
-                        print('tl_1_color', tl_1_color)
                         if tl_1_color == 'red':
                             # Display traffic light BGR color scheme
                             # cv.ellipse(img, (320, 265), (131, 131), 0, -90, val, (255, 180, 0), 27)
@@ -132,13 +131,11 @@ while True:
                     #         make_coffee()
                     #     case _:
                     #         print("Code not found")
-
-                if str(data)  == str(id_tl_2):
-                    if buffer2 >8:
-                        buffer1 = 0
-                        buffer2 = buffer2 + 1
-                        buffer3 = 0
-                        print('tl_2_color', tl_2_color)
+                if data == id_tl_2:
+                    buffer1 = 0
+                    buffer2 = buffer2 + 1
+                    buffer3 = 0
+                    if buffer2 > 8:
                         if tl_2_color == 'red':
                              cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
                              cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
@@ -151,13 +148,11 @@ while True:
                             cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
                             cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
                             cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
-
-                if str(data)  == str(id_tl_3):
+                if data == id_tl_3:
+                    buffer1 = 0
+                    buffer2 = 0
+                    buffer3 = buffer3 + 1
                     if buffer3 > 8:
-                        buffer1 = 0
-                        buffer2 = 0
-                        buffer3 = buffer3 + 1
-                        print('tl_3_color', tl_3_color)
                         if tl_3_color == 'red':
                             cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
                             cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
