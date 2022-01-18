@@ -32,11 +32,15 @@ buffer3 = 0
 
 # change to your ESP32-CAM ip
 url = "http://192.168.1.107/cam.mjpeg"
-CAMERA_BUFFRER_SIZE = 4096 #16384 #8192 #4096
+CAMERA_BUFFRER_SIZE = 16384 #8192 #4096 #2048 #32768
 stream = urlopen(url)
 bts = b''
 i = 0
 detector = cv.QRCodeDetector()
+
+#Создадим свечение вокруг светофора
+glow_strength = 1  # 0: no glow, no maximum
+glow_radius = 35  # blur radius
 
 while True:
     #Задаём установку цветов для светофора 1
@@ -104,7 +108,9 @@ while True:
                             # Display traffic light BGR color scheme
                             # cv.ellipse(img, (320, 265), (131, 131), 0, -90, val, (255, 180, 0), 27)
                             # cv2.circle(image, center_coordinates, radius, color, thickness)
-                            cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
+                            circle = cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
+                            img_blurred = cv.GaussianBlur(circle, (glow_radius, glow_radius), 0)
+                            cv.addWeighted(circle, 1, img_blurred,  glow_strength, 0)
                             cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
                             cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
                         elif tl_1_color == 'yellow':
