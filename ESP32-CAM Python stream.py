@@ -25,6 +25,11 @@ id_tl_1 = "https://readyforsky.com"
 id_tl_2 = "Traffic light 12345"
 id_tl_3 = "Traffic light 11"
 
+#Буферные накопители для устранения дребезга
+buffer1 = 0
+buffer2 = 0
+buffer3 = 0
+
 # change to your ESP32-CAM ip
 url = "http://192.168.1.109/cam.mjpeg"
 CAMERA_BUFFRER_SIZE = 16384 #8192 #4096
@@ -90,7 +95,27 @@ while True:
             # if there is a QR code
             if bbox is not None:
                 print(f"QRCode data:\n{data}")
-                if data == id_tl_1:
+                if str(data) == str(id_tl_1):
+                    buffer1 = buffer1 + 1
+                    buffer2 = 0
+                    buffer3 = 0
+                    if buffer1 > 8: #Антидребезг
+                        print('tl_1_color', tl_1_color)
+                        if tl_1_color == 'red':
+                            # Display traffic light BGR color scheme
+                            # cv.ellipse(img, (320, 265), (131, 131), 0, -90, val, (255, 180, 0), 27)
+                            # cv2.circle(image, center_coordinates, radius, color, thickness)
+                            cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
+                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                        elif tl_1_color == 'yellow':
+                            cv.circle(img, (600, 75), 20, (0, 255, 255), -1)  # Yellow
+                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
+                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                        elif tl_1_color == 'green':
+                            cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
+                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
                     #После обновления python до 3.10 можно будет использовать инструкцию match-case
                     #Example
                     # http_code = "418"
@@ -107,32 +132,44 @@ while True:
                     #         make_coffee()
                     #     case _:
                     #         print("Code not found")
-                    print('tl_1_color', tl_1_color)
-                    if tl_1_color == 'red':
-                        #Display traffic light BGR color scheme
-                        #cv.ellipse(img, (320, 265), (131, 131), 0, -90, val, (255, 180, 0), 27)
-                        #cv2.circle(image, center_coordinates, radius, color, thickness)
-                        cv.circle(img, (600, 30), 20, (0, 00, 255), -1)#Read
-                    elif tl_1_color == 'yellow':
-                        cv.circle(img, (600, 75), 20, (0, 255, 255), -1)  # Yellow
-                    elif tl_1_color == 'green':
-                        cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
-                if data == id_tl_2:
-                    print('tl_2_color', tl_2_color)
-                    if tl_2_color == 'red':
-                         cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
-                    elif tl_2_color == 'yellow':
-                        cv.circle(img, (600, 75), 20, (0, 255, 255), -1)  # Yellow
-                    elif tl_2_color == 'green':
-                        cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
-                if data == id_tl_3:
-                    print('tl_3_color', tl_3_color)
-                    if tl_3_color == 'red':
-                        cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
-                    elif tl_3_color == 'yellow':
-                        cv.circle(img, (600, 75), 20, (0, 255, 255), -1)  # Yellow
-                    elif tl_3_color == 'green':
-                        cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
+
+                if str(data)  == str(id_tl_2):
+                    if buffer2 >8:
+                        buffer1 = 0
+                        buffer2 = buffer2 + 1
+                        buffer3 = 0
+                        print('tl_2_color', tl_2_color)
+                        if tl_2_color == 'red':
+                             cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
+                             cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
+                             cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                        elif tl_2_color == 'yellow':
+                            cv.circle(img, (600, 75), 20, (0, 255, 255), -1)  # Yellow
+                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
+                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                        elif tl_2_color == 'green':
+                            cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
+                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
+
+                if str(data)  == str(id_tl_3):
+                    if buffer3 > 8:
+                        buffer1 = 0
+                        buffer2 = 0
+                        buffer3 = buffer3 + 1
+                        print('tl_3_color', tl_3_color)
+                        if tl_3_color == 'red':
+                            cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
+                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                        elif tl_3_color == 'yellow':
+                            cv.circle(img, (600, 75), 20, (0, 255, 255), -1)  # Yellow
+                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
+                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                        elif tl_3_color == 'green':
+                            cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
+                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
 
                 # display the image with lines
                 # length of bounding box
@@ -147,6 +184,7 @@ while True:
                     cv.line(img, point1, point2, color=(255, 0, 0), thickness=2)
 
             cv.imshow("stream", img)
+
         k = cv.waitKey(1)
     except Exception as e:
         print("Error:" + str(e))

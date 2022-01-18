@@ -66,7 +66,7 @@ qr = qrcode.QRCode(
 #ERROR_CORRECT_Q = 25%
 #ERROR_CORRECT_H = 30%
 
-qr_data = "Traffic light 11"
+qr_data = "Traffic light 22342"
 
 qr.add_data(f"QRCode for: {qr_data}")
 img = qr.make_image(back_color=(47, 48, 70), fill_color=(255, 255, 255)).convert('RGB') #Задаём параметры для файла и конвертируем в RGB чтобы логотип был цветным
