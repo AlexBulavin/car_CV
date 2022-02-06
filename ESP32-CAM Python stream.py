@@ -4,7 +4,6 @@ from urllib.request import urlopen
 import time
 import os
 import datetime
-import time
 import sys
 
 tl_0 = time.time()#Задаём начальное время отсчёта при старте программы
