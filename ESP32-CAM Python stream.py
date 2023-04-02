@@ -1,11 +1,20 @@
 import cv2 as cv
 import numpy as np
 from urllib.request import urlopen
-import time
 import os
 import datetime
 import time
 import sys
+# from cvzone.SerialModule import SerialObject
+# arduino = SerialObject() #("Arduino MKR1000")
+
+# import serial
+# ser = serial.Serial("/dev/cu.usbserial-1430")  # open serial port
+# print(ser.portstr)      # check which port was really used
+# print(ser.read())       # read from port and print into terminal
+# # ser.write("hello")      # write a string
+# # ser.write(0xa4)         # write a byte
+# # ser.close()             # close port
 
 tl_0 = time.time()#Задаём начальное время отсчёта при старте программы
 tl_1 = 5 #Определяем задержку для переключения цветов светофора типа tl_1 в секундах
@@ -31,7 +40,7 @@ buffer2 = 0
 buffer3 = 0
 
 # change to your ESP32-CAM ip
-url = "http://192.168.1.107/cam.mjpeg"
+url = "http://192.168.1.109/cam.mjpeg"
 CAMERA_BUFFRER_SIZE = 16384 #8192 #4096 #2048 #32768
 stream = urlopen(url)
 bts = b''
@@ -40,7 +49,7 @@ detector = cv.QRCodeDetector()
 
 #Создадим свечение вокруг светофора
 glow_strength = 1  # 0: no glow, no maximum
-glow_radius = 35  # blur radius
+glow_radius = 5  # blur radius
 
 while True:
     #Задаём установку цветов для светофора 1
@@ -109,8 +118,10 @@ while True:
                             # cv.ellipse(img, (320, 265), (131, 131), 0, -90, val, (255, 180, 0), 27)
                             # cv2.circle(image, center_coordinates, radius, color, thickness)
                             circle = cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
-                            img_blurred = cv.GaussianBlur(circle, (glow_radius, glow_radius), 0)
-                            cv.addWeighted(circle, 1, img_blurred,  glow_strength, 0)
+                            img_blurred = cv.GaussianBlur(circle, (glow_radius, glow_radius), cv.BORDER_DEFAULT) #Создать размытое изображение
+                            cv.addWeighted(circle, 0.3, img_blurred,  glow_strength, 0) #Добавить одно изображение к другому
+                            #dst = cv.addWeighted(src1, alpha, src2, beta, gamma[, dst[, dtype]])
+                            #Источник: https: // tonais.ru / library / dobavlenie - ili - smeshivanie - dvuh - izobrazheniy - s - ispolzovaniem - opencv - v - python
                             cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
                             cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
                         elif tl_1_color == 'yellow':
@@ -185,7 +196,8 @@ while True:
                     cv.line(img, point1, point2, color=(255, 0, 0), thickness=2)
 
             cv.imshow("stream", img)
-
+            # serial_port = arduino.getData()
+            # print(serial_port)
         k = cv.waitKey(1)
     except Exception as e:
         print("Error:" + str(e))
@@ -202,3 +214,4 @@ while True:
     if k & 0xFF == ord('q'):
         break
 cv.destroyAllWindows()
+# ser.close() # close port

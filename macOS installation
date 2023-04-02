@@ -1,0 +1,115 @@
+[ ! -d ~/macOS-installer/ ] && mkdir ~/macOS-installer; cd ~/macOS-installer; [ ! -f ~/macOS-installer/installinstallmacos.py ] && curl -O https://raw.githubusercontent.com/munki/macadmin-scripts/main/installinstallmacos.py ; sudo python installinstallmacos.py
+
+Once finished, you'll find in your ~/macOS-Installer/
+
+Сделать загрузочную флешку
+
+sudo /Applications/Install\ macOS\ Monterey\.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume
+
+На запрос нажимаем Y
+Ожидать до окончания
+
+Далее делаем Opencore patch
+Вставляем малую flash во второй usb порт и переходим снова в дисковую утилиту
+
+Выбираем Стереть
+Имя UNTITLED
+Формат MS-DOS(FAT)
+Схема GUID
+
+Стереть
+
+Готово
+На раб. стьоле выделяем все flash накопители кроме UNTITLED
+
+Выбираем Извлечь
+
+21) Переходим сюда:
+https://dortania.github.io/OpenCore-Legacy-Patcher/BUILD.html
+
+First Download the latest release:
+
+    OpenCore Legacy Patcher Releases https://github.com/dortania/Opencore-Legacy-Patcher/releases
+22) Скачиваем последнюю версию патчера
+
+23) Next, run the OpenCore-Patcher.app:
+
+24) выбираем Build and install OpenCore
+
+25) выбираем маленькую флешку
+
+26) Install
+
+27) На сообщение Done нажать Quite
+
+28) Установка
+
+29) Вставляем обе flash
+
+30) Выключаем iMac
+
+31) Зажимаем option или alt и нажимаем кнопку включения
+
+32) Удерживаем alt
+
+33) Выбираем EFI Boot
+
+34) Выбираем Monterey
+
+35) Выбираем Дисковая утилита
+
+36) Вид -> все устройства
+
+37) Apple SSD
+
+38) Стереть
+
+39) Имя iMac-Alex
+Формат APFS
+Схема GUID
+
+40) Стереть
+
+41) Закрыть дисковую утилиту
+
+42) Выбираем Установка MacOS Monterey
+
+43) Продолжить
+
+44) Принимаем пользовательское соглашение
+
+45) Выбираем iMac-Alex
+
+46) Продолжить
+
+47) Ждём минут 50 доокончания установки
+
+48) На раб. столе выбираем 2 флешки и Извлечь
+
+49) Открываем браузер
+
+50) Переходим на сайт OpenCore
+
+51) Скачиваем посл. версию OC с Гита
+
+52) Запускаем
+
+53) Выбираем Build & Install Open Core
+
+54) Выбираем Apple SSD -> Continue
+
+55) Вводим пароль -> Готово
+
+56) Выключить iMac
+
+57) Ждём 10 секунл
+
+58) Зажимаем Alt и Включаем кнопкой
+
+59) Alt удерживаем
+
+60) Выбираем EFI Boot
+
+61) Выбираем Makintosh HD
+
+62)
