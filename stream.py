@@ -26,9 +26,9 @@ import urllib.request
 import cv2
 import numpy as np
 
-#Выбрать URL в зависимости от работоспособности системы, скорости передачи данных и т.д.
-#url = 'http://192.168.1.109/cam-lo.jpg'
-#url = 'http://192.168.1.112/cam.mjpeg'
+# Выбрать URL в зависимости от работоспособности системы, скорости передачи
+# данных и т.д. url = 'http://192.168.1.109/cam-lo.jpg' url =
+# 'http://192.168.1.112/cam.mjpeg'
 url = 'http://192.168.1.112/cam-hi.jpg'
 #url = 'http://192.168.1.109/cam.bmp'
 # initialize the cv2 QRCode detector
@@ -50,8 +50,10 @@ while True:
             # display the image with lines
             # length of bounding box
             n_lines = len(
-                bbox[0])  # Поскольку bbox = [[[float, float]]], необходимо перейти к int и идти по первому элементу массива
-            bbox1 = bbox.astype(int)  # Преобразовали координаты к целочисленным
+                bbox[0])  # Поскольку bbox = [[[float, float]]], необходимо
+            # перейти к int и идти по первому элементу массива
+            bbox1 = bbox.astype(int)  # Преобразовали координаты к
+            # целочисленным
             for i in range(n_lines):
                 # draw all lines
                 point1 = tuple(bbox1[0, [i][0]])

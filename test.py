@@ -40,7 +40,8 @@ import cv2
 # print ("Video stop")
 
 #Example 3
-cap = cv2.VideoCapture(0);               # Видео вывод с веб камеры компьютера, при включенной камере
+cap = cv2.VideoCapture(0);               # Видео вывод с веб камеры
+# компьютера, при включенной камере
 #cap = cv2.VideoCapture("VIDEO0102.mp4"); # Вывод с видео файла
 
 print(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) # Вывод в консоли размера нашего окна.
@@ -54,8 +55,10 @@ print(cap.get(4))
 while (True):
     ret, frame = cap.read()
     frame = cv2.rectangle(frame, (384, 0), (510, 128), (0, 0, 255), 2)
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Перевод массива кадров в черно-белую градацию
-    gray = cv2.GaussianBlur(gray, (7, 7), 1.5)  # Параметры позволяют регулировать шумность
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Перевод массива кадров
+    # в черно-белую градацию
+    gray = cv2.GaussianBlur(gray, (7, 7), 1.5)  # Параметры позволяют
+    # регулировать шумность
 
     edges = cv2.Canny(gray, 1, 50)  # Нахождение контуров
     cv2.imshow("edges", edges)  # обработанный вариант

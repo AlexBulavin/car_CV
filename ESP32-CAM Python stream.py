@@ -5,6 +5,7 @@ import os
 import datetime
 import time
 import sys
+
 # from cvzone.SerialModule import SerialObject
 # arduino = SerialObject() #("Arduino MKR1000")
 
@@ -16,43 +17,51 @@ import sys
 # # ser.write(0xa4)         # write a byte
 # # ser.close()             # close port
 
-tl_0 = time.time()#Задаём начальное время отсчёта при старте программы
-tl_1 = 5 #Определяем задержку для переключения цветов светофора типа tl_1 в секундах
-tl_2 = 5 #Определяем задержку для переключения цветов светофора типа tl_2 в секундах
-tl_3 = 5 #Определяем задержку для переключения цветов светофора типа tl_3 в секундах
-tl_4 = 5 #Определяем задержку для переключения цветов светофора типа tl_4 в секундах
-ph_1 = 0 #Определяем фазовое смещение для светофора в секундах относительно общей лоя системы нулевой точки
-ph_2 = 3 #Определяем фазовое смещение для светофора в секундах относительно общей лоя системы нулевой точки
-ph_3 = 5 #Определяем фазовое смещение для светофора в секундах относительно общей лоя системы нулевой точки
-ph_4 = 10 #Определяем фазовое смещение для светофора в секундах относительно общей лоя системы нулевой точки
-counter_tl_1 = tl_0 #Задали сначение для счётчика времени каждого светофора
-counter_tl_2 = tl_0 #Задали сначение для счётчика времени каждого светофора
-counter_tl_3 = tl_0 #Задали сначение для счётчика времени каждого светофора
-counter_tl_4 = tl_0 #Задали сначение для счётчика времени каждого светофора
-counter_tl_5 = tl_0 #Задали сначение для счётчика времени каждого светофора
+tl_0 = time.time()  # Задаём начальное время отсчёта при старте программы
+tl_1 = 5  # Определяем задержку для переключения цветов светофора типа tl_1
+# в секундах
+tl_2 = 5  # Определяем задержку для переключения цветов светофора типа tl_2
+# в секундах
+tl_3 = 5  # Определяем задержку для переключения цветов светофора типа tl_3
+# в секундах
+tl_4 = 5  # Определяем задержку для переключения цветов светофора типа tl_4
+# в секундах
+ph_1 = 0  # Определяем фазовое смещение для светофора в секундах
+# относительно общей для системы нулевой точки
+ph_2 = 3  # Определяем фазовое смещение для светофора в секундах
+# относительно общей для системы нулевой точки
+ph_3 = 5  # Определяем фазовое смещение для светофора в секундах
+# относительно общей для системы нулевой точки
+ph_4 = 10  # Определяем фазовое смещение для светофора в секундах
+# относительно общей для системы нулевой точки
+counter_tl_1 = tl_0  # Задали значение для счётчика времени каждого светофора
+counter_tl_2 = tl_0  # Задали значение для счётчика времени каждого светофора
+counter_tl_3 = tl_0  # Задали значение для счётчика времени каждого светофора
+counter_tl_4 = tl_0  # Задали значение для счётчика времени каждого светофора
+counter_tl_5 = tl_0  # Задали значение для счётчика времени каждого светофора
 id_tl_1 = "https://readyforsky.com"
 id_tl_2 = "Traffic light 22342"
 id_tl_3 = "Traffic light 12345"
 
-#Буферные накопители для устранения дребезга
+# Буферные накопители для устранения дребезга
 buffer1 = 0
 buffer2 = 0
 buffer3 = 0
 
 # change to your ESP32-CAM ip
 url = "http://192.168.1.109/cam.mjpeg"
-CAMERA_BUFFRER_SIZE = 16384 #8192 #4096 #2048 #32768
+CAMERA_BUFFRER_SIZE = 16384  # 8192 #4096 #2048 #32768
 stream = urlopen(url)
 bts = b''
 i = 0
 detector = cv.QRCodeDetector()
 
-#Создадим свечение вокруг светофора
+# Создадим свечение вокруг светофора
 glow_strength = 1  # 0: no glow, no maximum
 glow_radius = 5  # blur radius
 
 while True:
-    #Задаём установку цветов для светофора 1
+    # Задаём установку цветов для светофора 1
     if time.time() + ph_1 - counter_tl_1 < tl_1 + ph_1:
         tl_1_color = 'red'
     elif time.time() + ph_1 - counter_tl_1 < 2 * tl_1 + ph_1:
@@ -77,7 +86,7 @@ while True:
         tl_3_color = 'red'
     elif time.time() + ph_3 - counter_tl_3 < 2 * tl_3 + ph_3:
         tl_3_color = 'yellow'
-    elif time.time() + ph_3 - counter_tl_3 < 3 * tl_3 +ph_3:
+    elif time.time() + ph_3 - counter_tl_3 < 3 * tl_3 + ph_3:
         tl_3_color = 'green'
     else:
         counter_tl_3 = time.time()
@@ -89,18 +98,20 @@ while True:
         if jpghead > -1 and jpgend > -1:
             jpg = bts[jpghead:jpgend + 2]
             bts = bts[jpgend + 2:]
-            img = cv.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv.IMREAD_UNCHANGED)
-            # img=cv.flip(img,0) #>0:#Поворот по вертикали, 0:Поворот по горизонтали, <0:Отразить по вертикали и по горизонтали
-            # h, w = img.shape[:2]
-            # print('Размер изображения по высоте:' + str(h) + 'ширине：' + str(w))
+            img = cv.imdecode(np.frombuffer(jpg, dtype=np.uint8),
+                              cv.IMREAD_UNCHANGED)
+            # img=cv.flip(img,0) #>0:#Поворот по вертикали, 0:Поворот по
+            # горизонтали, <0:Отразить по вертикали и по горизонтали h,
+            # w = img.shape[:2] print('Размер изображения по высоте:' + str(
+            # h) + 'ширине：' + str(w))
             img = cv.resize(img, (640, 480))
 
-            # Display traffic light
-            # cv.ellipse(img, (320, 265), (131, 131), 0, -90, val, (255, 180, 0), 27)
-            # cv2.circle(image, center_coordinates, radius, color, thickness)
-            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)#Read
-            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)#Yellow
-            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)#Green
+            # Display traffic light cv.ellipse(img, (320, 265), (131, 131),
+            # 0, -90, val, (255, 180, 0), 27) cv2.circle(image,
+            # center_coordinates, radius, color, thickness)
+            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
+            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
+            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
 
             # detect and decode
             data, bbox, straight_qrcode = detector.detectAndDecode(img)
@@ -112,29 +123,47 @@ while True:
                     buffer1 = buffer1 + 1
                     buffer2 = 0
                     buffer3 = 0
-                    if buffer1 > 8: #Антидребезг
+                    if buffer1 > 8:  # Антидребезг
                         if tl_1_color == 'red':
                             # Display traffic light BGR color scheme
-                            # cv.ellipse(img, (320, 265), (131, 131), 0, -90, val, (255, 180, 0), 27)
-                            # cv2.circle(image, center_coordinates, radius, color, thickness)
-                            circle = cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
-                            img_blurred = cv.GaussianBlur(circle, (glow_radius, glow_radius), cv.BORDER_DEFAULT) #Создать размытое изображение
-                            cv.addWeighted(circle, 0.3, img_blurred,  glow_strength, 0) #Добавить одно изображение к другому
-                            #dst = cv.addWeighted(src1, alpha, src2, beta, gamma[, dst[, dtype]])
-                            #Источник: https: // tonais.ru / library / dobavlenie - ili - smeshivanie - dvuh - izobrazheniy - s - ispolzovaniem - opencv - v - python
-                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
-                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                            # cv.ellipse(img, (320, 265), (131, 131), 0,
+                            # -90, val, (255, 180, 0), 27) cv2.circle(image,
+                            # center_coordinates, radius, color, thickness)
+                            circle = cv.circle(img, (600, 30), 20,
+                                               (0, 00, 255), -1)  # Read
+                            img_blurred = cv.GaussianBlur(circle, (
+                            glow_radius, glow_radius),
+                                                          cv.BORDER_DEFAULT)
+                            # Создать размытое изображение
+                            cv.addWeighted(circle, 0.3, img_blurred,
+                                           glow_strength,
+                                           0)  # Добавить одно изображение к
+                            # другому dst = cv.addWeighted(src1, alpha,
+                            # src2, beta, gamma[, dst[, dtype]]) Источник:
+                            # https: // tonais.ru / library / dobavlenie -
+                            # ili - smeshivanie - dvuh - izobrazheniy - s -
+                            # ispolzovaniem - opencv - v - python
+                            cv.circle(img, (600, 75), 20, (0, 255, 255),
+                                      1)  # Yellow
+                            cv.circle(img, (600, 120), 20, (0, 255, 0),
+                                      1)  # Green
                         elif tl_1_color == 'yellow':
-                            cv.circle(img, (600, 75), 20, (0, 255, 255), -1)  # Yellow
-                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
-                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                            cv.circle(img, (600, 75), 20, (0, 255, 255),
+                                      -1)  # Yellow
+                            cv.circle(img, (600, 30), 20, (0, 00, 255),
+                                      1)  # Read
+                            cv.circle(img, (600, 120), 20, (0, 255, 0),
+                                      1)  # Green
                         elif tl_1_color == 'green':
-                            cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
-                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
-                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
-                    #После обновления python до 3.10 можно будет использовать инструкцию match-case
-                    #Example
-                    # http_code = "418"
+                            cv.circle(img, (600, 120), 20, (0, 255, 0),
+                                      -1)  # Green
+                            cv.circle(img, (600, 30), 20, (0, 00, 255),
+                                      1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255),
+                                      1)  # Yellow
+                    # После обновления python до 3.10 можно будет
+                    # использовать инструкцию match-case Example http_code =
+                    # "418"
                     #
                     # match http_code:
                     #     case "200":
@@ -154,46 +183,67 @@ while True:
                     buffer3 = 0
                     if buffer2 > 8:
                         if tl_2_color == 'red':
-                             cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
-                             cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
-                             cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                            cv.circle(img, (600, 30), 20, (0, 00, 255),
+                                      -1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255),
+                                      1)  # Yellow
+                            cv.circle(img, (600, 120), 20, (0, 255, 0),
+                                      1)  # Green
                         elif tl_2_color == 'yellow':
-                            cv.circle(img, (600, 75), 20, (0, 255, 255), -1)  # Yellow
-                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
-                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                            cv.circle(img, (600, 75), 20, (0, 255, 255),
+                                      -1)  # Yellow
+                            cv.circle(img, (600, 30), 20, (0, 00, 255),
+                                      1)  # Read
+                            cv.circle(img, (600, 120), 20, (0, 255, 0),
+                                      1)  # Green
                         elif tl_2_color == 'green':
-                            cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
-                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
-                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
+                            cv.circle(img, (600, 120), 20, (0, 255, 0),
+                                      -1)  # Green
+                            cv.circle(img, (600, 30), 20, (0, 00, 255),
+                                      1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255),
+                                      1)  # Yellow
                 if data == id_tl_3:
                     buffer1 = 0
                     buffer2 = 0
                     buffer3 = buffer3 + 1
                     if buffer3 > 8:
                         if tl_3_color == 'red':
-                            cv.circle(img, (600, 30), 20, (0, 00, 255), -1)  # Read
-                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
-                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                            cv.circle(img, (600, 30), 20, (0, 00, 255),
+                                      -1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255),
+                                      1)  # Yellow
+                            cv.circle(img, (600, 120), 20, (0, 255, 0),
+                                      1)  # Green
                         elif tl_3_color == 'yellow':
-                            cv.circle(img, (600, 75), 20, (0, 255, 255), -1)  # Yellow
-                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
-                            cv.circle(img, (600, 120), 20, (0, 255, 0), 1)  # Green
+                            cv.circle(img, (600, 75), 20, (0, 255, 255),
+                                      -1)  # Yellow
+                            cv.circle(img, (600, 30), 20, (0, 00, 255),
+                                      1)  # Read
+                            cv.circle(img, (600, 120), 20, (0, 255, 0),
+                                      1)  # Green
                         elif tl_3_color == 'green':
-                            cv.circle(img, (600, 120), 20, (0, 255, 0), -1)  # Green
-                            cv.circle(img, (600, 30), 20, (0, 00, 255), 1)  # Read
-                            cv.circle(img, (600, 75), 20, (0, 255, 255), 1)  # Yellow
+                            cv.circle(img, (600, 120), 20, (0, 255, 0),
+                                      -1)  # Green
+                            cv.circle(img, (600, 30), 20, (0, 00, 255),
+                                      1)  # Read
+                            cv.circle(img, (600, 75), 20, (0, 255, 255),
+                                      1)  # Yellow
 
                 # display the image with lines
                 # length of bounding box
                 n_lines = len(
                     bbox[
-                        0])  # Поскольку bbox = [[[float, float]]], необходимо перейти к int и идти по первому элементу массива
-                bbox1 = bbox.astype(int)  # Преобразовали координаты к целочисленным
+                        0])  # Поскольку bbox = [[[float, float]]],
+                # необходимо перейти к int и идти по первому элементу массива
+                bbox1 = bbox.astype(
+                    int)  # Преобразовали координаты к целочисленным
                 for i in range(n_lines):
                     # draw all lines
                     point1 = tuple(bbox1[0, [i][0]])
                     point2 = tuple(bbox1[0, [(i + 1) % n_lines][0]])
-                    cv.line(img, point1, point2, color=(255, 0, 0), thickness=2)
+                    cv.line(img, point1, point2, color=(255, 0, 0),
+                            thickness=2)
 
             cv.imshow("stream", img)
             # serial_port = arduino.getData()

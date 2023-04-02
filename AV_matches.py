@@ -1,5 +1,7 @@
-#Из этого примера: https://bitesofcode.wordpress.com/2017/09/12/augmented-reality-with-python-and-opencv-part-1/
-# https://bitesofcode.wordpress.com/2018/09/16/augmented-reality-with-python-and-opencv-part-2/
+# Из этого примера: https://bitesofcode.wordpress.com/2017/09/12/augmented
+# -reality-with-python-and-opencv-part-1/
+# https://bitesofcode.wordpress.com/2018/09/16/augmented-reality-with-python
+# -and-opencv-part-2/
 
 import urllib.request
 import cv2
