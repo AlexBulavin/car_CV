@@ -3,7 +3,6 @@ import numpy as np
 from urllib.request import urlopen
 import os
 import datetime
-import time
 import sys
 
 # from cvzone.SerialModule import SerialObject
@@ -264,4 +263,7 @@ while True:
     if k & 0xFF == ord('q'):
         break
 cv.destroyAllWindows()
+<<<<<<< HEAD
 # ser.close() # close port
+=======
+>>>>>>> dfc8571a9678636e1f33227648138070f9e06516
